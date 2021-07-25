@@ -1,19 +1,29 @@
 <template>
-    <div>
-        <layout>
-        Money
-        </layout>
-    </div>
+  <div>
+    <Layout class-prefix="layout" >
+      <NumberPad />
+      <Types />
+      <Notes />
+      <Tags />
+    </Layout>
+  </div>
 </template>
 
-<script>
-import Layout from '@/components/Layout.vue'
-    export default {
-  components: { Layout },
-        name:'Money'
-    }
+<script lang="ts">
+import Types from "@/components/Money/Types.vue";
+import Notes from "@/components/Money/Notes.vue";
+import Tags from "@/components/Money/Tags.vue";
+import NumberPad from "@/components/Money/NumberPad.vue";
+
+export default {
+  components: { Types, Tags, NumberPad, Notes },
+  name: "Money",
+};
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+.layout-content{
+  display: flex;
+  flex-direction: column-reverse;
+}
 </style>
