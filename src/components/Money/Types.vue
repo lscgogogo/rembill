@@ -16,10 +16,12 @@ export default class Types extends Vue {
   type = "-";
   selectType(type: string) {
     if (type !== "-" && type !== "+") {
-      throw new Error("type is unknown");
+      throw new Error("type is unknown"); 
     }
     this.type = type;
   }
+
+
 }
 </script>
 
