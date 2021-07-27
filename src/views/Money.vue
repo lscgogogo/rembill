@@ -16,18 +16,18 @@ import Notes from "@/components/Money/Notes.vue";
 import Tags from "@/components/Money/Tags.vue";
 import NumberPad from "@/components/Money/NumberPad.vue";
 import {Component,Watch} from 'vue-property-decorator';
+import recordListModel from '@/models/recordListModel';
 
 
-const recordList : Record[] = JSON.parse(window.localStorage.getItem('recordList') || '[]');
+const recordList:RecordItem[] = recordListModel.fetch();
 
-type Record ={
-  tags:string[]
-  notes:string
-  type:string
-  amount:number
-  createAt?:Date
+type RecordItem = {
+  tags: string[]
+  notes: string
+  type: string
+  amount: number // 数据类型 object | string
+  createdAt?: Date  // 类 / 构造函数
 }
-
 @Component({
   components: { Types, Tags, NumberPad, Notes },
 })
@@ -35,8 +35,8 @@ type Record ={
 
 export default class Money extends Vue{
   tags=['衣','食','住','行'];
-  recordList:Record[] =recordList;
-  record:Record = {
+  recordList:RecordItem[] =recordList;
+  record:RecordItem = {
     tags:[],notes:'',type:'-',amount:0
   };
 
@@ -47,8 +47,8 @@ export default class Money extends Vue{
     this.record.tags = value;
   }
   saveRecord(){
-    const record2:Record = JSON.parse(JSON.stringify(this.record));
-    record2.createAt = new Date();
+    const record2:RecordItem = recordListModel.clone(this.record);
+    record2.createdAt = new Date();
     this.recordList.push(record2);
   }
 
