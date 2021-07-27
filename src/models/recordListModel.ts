@@ -4,7 +4,7 @@ const recordListModel = {
         return JSON.parse(JSON.stringify(data))
     },
     fetch(){
-        return  JSON.parse(window.localStorage.getItem('recordList') || '[]') as RecordItem[];
+        return  JSON.parse(window.localStorage.getItem('localStorgeKeyName') || '[]') as RecordItem[];
 
     },
     save(data:RecordItem[]){
