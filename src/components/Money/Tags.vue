@@ -4,10 +4,10 @@
             <button @click="create" >新增标签</button>
         </div>
         <ul class="current">
-          <li v-for="tag in dataSource" :key="tag"
+          <li v-for="tag in dataSource" :key="tag.id"
           :class="{selected: selectedTags.indexOf(tag)>=0}"
-            @click="toggle(tag)">{{tag.name}}</li>
-            
+            @click="toggle(tag)">{{tag.name}}
+            </li>       
         </ul>
     </div>
 </template>
@@ -30,6 +30,7 @@ selectedTags:string[] = [];
       }
       this.$emit('update:value',this.selectedTags)
     }
+    
     create(){
         const name = window.prompt('请输入标签名');
         if(name === ''){
