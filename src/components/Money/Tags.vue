@@ -52,6 +52,7 @@ selectedTags:string[] = [];
     flex-grow: 1;
     flex-direction: column-reverse;
     padding: 16px;
+    background: white;
     > .current{
         display: flex;
         flex-wrap: wrap;

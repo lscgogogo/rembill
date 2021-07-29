@@ -3,7 +3,7 @@
     <Layout class-prefix="layout">
       <NumberPad :value.sync="record.amount" @submit="saveRecord" />
       <Types :value.sync="record.type" />
-      <Notes fieldName="备注" placeholder="在这里输入备注" @update:value="onUpdateNotes" />
+      <FormItem fieldName="备注" placeholder="在这里输入备注" @update:value="onUpdateNotes" />
       <Tags :data-source.sync="tags" @update:value="onUpdateTags" />
     </Layout>
   </div>
@@ -12,7 +12,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Types from "@/components/Money/Types.vue";
-import Notes from "@/components/Money/Notes.vue";
+import FormItem from "@/components/Money/FormItem.vue";
 import Tags from "@/components/Money/Tags.vue";
 import NumberPad from "@/components/Money/NumberPad.vue";
 import {Component,Watch} from 'vue-property-decorator';
@@ -32,7 +32,7 @@ type RecordItem = {
   createdAt?: Date  // 类 / 构造函数
 }
 @Component({
-  components: { Types, Tags, NumberPad, Notes },
+  components: { Types, Tags, NumberPad, FormItem },
 })
 
 
