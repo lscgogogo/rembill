@@ -2,70 +2,64 @@
   <div>
     <Layout class-prefix="layout">
       <NumberPad :value.sync="record.amount" @submit="saveRecord" />
-      <Types :value.sync="record.type" />
-      <FormItem fieldName="备注" placeholder="在这里输入备注" @update:value="onUpdateNotes" />
-      <Tags :data-source.sync="tags" @update:value="onUpdateTags" />
+      <Tabs :data-source='recordTypeList'
+            :value.sync="record.type" />
+      <div class="notes">
+        <FormItem
+          fieldName="备注"
+          placeholder="在这里输入备注"
+          @update:value="onUpdateNotes"
+        />
+      </div>
+      <Tags />
     </Layout>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Types from "@/components/Money/Types.vue";
+import Vue from "vue";
+import Tabs from "@/components/Tabs.vue";
 import FormItem from "@/components/Money/FormItem.vue";
 import Tags from "@/components/Money/Tags.vue";
 import NumberPad from "@/components/Money/NumberPad.vue";
-import {Component,Watch} from 'vue-property-decorator';
-import recordListModel from '@/models/recordListModel';
-import tagListModel from '@/models/tagListModel';
+import { Component } from "vue-property-decorator";
+import recordTypeList from "@/constants/recordTypeList";
+import {RecordItem}  from '@/custom'
 
-
-const recordList:RecordItem[] = recordListModel.fetch();
-const tagList = tagListModel.fetch();
-
-
-type RecordItem = {
-  tags: string[]
-  notes: string
-  type: string
-  amount: number // 数据类型 object | string
-  createdAt?: Date  // 类 / 构造函数
-}
 @Component({
-  components: { Types, Tags, NumberPad, FormItem },
+  components: { Tabs, Tags, NumberPad, FormItem },
+
 })
-
-
-export default class Money extends Vue{
-  tags = tagList;
-  recordList:RecordItem[] =recordList;
-  record:RecordItem = {
-    tags:[],notes:'',type:'-',amount:0
+export default class Money extends Vue {
+  get recordList(){
+    return this.$store.state.recordList;
+  }
+  record: RecordItem = {
+    tags: [],
+    notes: "",
+    type: "-",
+    amount: 0,
   };
 
-  onUpdateNotes(value:string){
+  recordTypeList=recordTypeList
+
+  onUpdateNotes(value: string) {
     this.record.notes = value;
   }
-  onUpdateTags(value:string[]){
-    this.record.tags = value;
-  }
-  saveRecord(){
-    const record2:RecordItem = recordListModel.clone(this.record);
-    record2.createdAt = new Date();
-    this.recordList.push(record2);
-  }
 
-  @Watch('recordList')
-    onRecordListChange(){
-      window.localStorage.setItem('recordList',JSON.stringify(this.recordList))
-    }
-  
+  saveRecord() {
+    this.$store.commit('createRecord',this.record);
+  }
 }
 </script>
 
-<style lang="scss">
-.layout-content {
-  display: flex;
-  flex-direction: column-reverse;
+<style lang="scss" scoped>
+  ::v-deep .layout-content {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+.notes {
+  padding: 12px 0;
 }
 </style>

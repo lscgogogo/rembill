@@ -14,6 +14,8 @@ Vue.component('Layout',Layout)
 Vue.component('Icon',Icon)
 
 
+
+
 new Vue({
   router:router,
   store,
