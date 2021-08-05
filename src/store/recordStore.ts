@@ -1,4 +1,4 @@
-
+import {RecordItem}  from '@/custom'
 import clone from '@/lib/clone';
 
 const localStorageKeyName = 'recordList';
