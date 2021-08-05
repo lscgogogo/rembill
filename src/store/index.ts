@@ -77,7 +77,6 @@ const store = new Vuex.Store({
       state.createTagError = null;
       const names = state.tagList.map(item => item.name);
       if (names.indexOf(name) >= 0) {
-        window.alert('标签名重复了');
         state.createTagError = new Error('tag name duplicated')
         return;
       }
