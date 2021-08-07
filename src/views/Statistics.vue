@@ -5,7 +5,10 @@
       :data-source="recordTypeList"
       :value.sync="type"
     />
-    <ol v-if="groupedList.length>0">
+    <div class="chart-wrapper" ref="chartWrapper">
+      <Chart class="chart" :options="chartOptions" />
+    </div>
+    <ol v-if="groupedList.length > 0">
       <li v-for="(group, index) in groupedList" :key="index">
         <h3 class="title">
           {{ beautify(group.title) }} <span>￥{{ group.total }}</span>
@@ -19,9 +22,7 @@
         </ol>
       </li>
     </ol>
-    <div v-else class="noResult">
-      目前没有相关记录
-    </div>
+    <div v-else class="noResult">目前没有相关记录</div>
   </Layout>
 </template>
 
@@ -32,17 +33,91 @@ import Tabs from "@/components/Tabs.vue";
 import recordTypeList from "@/constants/recordTypeList";
 import dayjs from "dayjs";
 import clone from "@/lib/clone";
-import {RecordItem,Tag,RootState}  from '@/custom'
+import { RecordItem, Tag, RootState } from "@/custom";
+import Chart from "@/components/Chart.vue";
+import _ from "lodash";
 
 @Component({
-  components: { Tabs },
+  components: { Tabs, Chart },
 })
 export default class Statistics extends Vue {
   type = "-";
   recordTypeList = recordTypeList;
+  mounted() {
+    const div = this.$refs.chartWrapper as HTMLDivElement;
+    div.scrollLeft = div.scrollWidth;
+  }
 
+  get keyValueList() {
+    const today = new Date();
+    const array = [];
+    for (let i = 0; i <= 29; i++) {
+      const dateString = dayjs(today).subtract(i, "day").format("YYYY-MM-DD");
+      const found = _.find(this.groupedList, {
+          title: dateString
+        });
+      array.push({
+        key: dateString,
+        value: found ? found.total : 0
+      });
+    }
+    array.sort((a, b) => {
+      if (a.key > b.key) {
+        return 1;
+      } else if (a.key === b.key) {
+        return 0;
+      } else {
+        return -1;
+      }
+    });
+    console.log("array");
+    console.log(array);
+    return array;
+  }
+
+  get chartOptions() {
+    const keys = this.keyValueList.map((item) => item.key);
+    const values = this.keyValueList.map((item) => item.value);
+    return {
+      grid: {
+        left: 0,
+        right: 0,
+      },
+      xAxis: {
+        type: "category",
+        data: keys,
+        axisTick: { alignWithLabel: true },
+        axisLine: { lineStyle: { color: "#666" } },
+        axisLabel: {
+          formatter: function (value: string, index: number) {
+            return value.substr(5);
+          },
+        },
+      },
+      yAxis: {
+        type: "value",
+        show: false,
+      },
+      series: [
+        {
+          symbol: "circle",
+          symbolSize: 12,
+          itemStyle: { borderWidth: 1, color: "#666", borderColor: "#666" },
+          // lineStyle: {width: 10},
+          data: values,
+          type: "line",
+        },
+      ],
+      tooltip: {
+        show: true,
+        triggerOn: "click",
+        position: "top",
+        formatter: "{c}",
+      },
+    };
+  }
   tagString(tags: Tag[]) {
-    return tags.length === 0 ? "无" : tags.map(t => t.name).join("，");
+    return tags.length === 0 ? "无" : tags.map((t) => t.name).join("，");
   }
 
   beautify(string: string) {
@@ -74,7 +149,9 @@ export default class Statistics extends Vue {
       .sort(
         (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
       );
-      if(newList.length === 0){return []}
+    if (newList.length === 0) {
+      return [];
+    }
     type Result = { title: string; total?: number; items: RecordItem[] }[];
     const result: Result = [
       {
@@ -143,8 +220,17 @@ export default class Statistics extends Vue {
   color: #999;
 }
 
-.noResult{
+.noResult {
   padding: 16px;
   text-align: center;
+}
+.chart {
+  width: 430%;
+  &-wrapper {
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }
 </style>

@@ -11,6 +11,9 @@
   "dependencies": {
     "core-js": "^3.4.4",
     "dayjs": "^1.8.20",
+    "echarts": "^4.8.0",
+    "express1": "^1.0.0",
+    "lodash": "^4.17.21",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
@@ -19,7 +22,9 @@
     "vuex": "^3.1.2"
   },
   "devDependencies": {
+    "@types/echarts": "^4.9.9",
     "@types/jest": "^24.0.19",
+    "@types/lodash": "^4.14.172",
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-eslint": "^4.1.0",
     "@vue/cli-plugin-pwa": "^4.1.0",
